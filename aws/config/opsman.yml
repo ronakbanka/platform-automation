@@ -1,0 +1,13 @@
+---
+opsman-configuration:
+  aws:
+    access_key_id: ((aws_access_key_id))
+    secret_access_key: ((aws_secret_access_key))
+    region: ((pcf_aws_region))
+    vm_name: ops-manager-vm                           # default: OpsManager-vm
+    boot_disk_size: 100                               # default 200
+    vpc_subnet_id: ((opsman_vpc_subnet))
+    security_group_id: ((opsman_security_group))
+    key_pair_name: ((pcf_aws_key_pair))
+    public_ip: ((opsman_domain))
+    instance_type: m5.large
