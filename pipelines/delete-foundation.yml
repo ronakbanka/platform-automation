@@ -1,0 +1,96 @@
+---
+resources:
+- name: pcf-automation-tasks
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_automation_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: platform-automation-tasks-(.*).zip
+    skip_ssl_verification: true
+
+- name: pcf-automation-image
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_automation_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: platform-automation-image-(.*).tgz
+    skip_ssl_verification: true
+
+- name: configuration
+  type: git
+  source:
+    uri: https://github.com/ronakbanka/platform-automation.git
+    branch: master
+    username: ((git_user))
+    password: ((git_password))
+    skip_ssl_verification: true
+
+#credhub interpolate properties
+credhub-interpolate: &credhub-interpolate
+  image: pcf-automation-image
+  file: pcf-automation-tasks/tasks/credhub-interpolate.yml
+  input_mapping:
+    files: configuration
+  output_mapping:
+    interpolated-files: config
+  params:
+    CREDHUB_CA_CERT: ((credhub_ca_cert.ca))
+    CREDHUB_CLIENT: ((credhub_client))
+    CREDHUB_SECRET: ((credhub_secret))
+    CREDHUB_SERVER: ((credhub_server))
+    PREFIX: /concourse/((foundation))
+    INTERPOLATION_PATH: ((foundation))
+
+jobs:
+- name: delete-deployment
+  plan:
+  - aggregate:
+    - get: pcf-automation-tasks
+      params:
+        unpack: true
+    - get: pcf-automation-image
+      params:
+        unpack: true
+  - get: configuration
+  - task: credhub-interpolate
+    <<: *credhub-interpolate
+  - task: delete-opsmanager-installation
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/delete-installation.yml
+    input_mapping:
+      env: config
+    params:
+      ENV_FILE: ((foundation))/env/env.yml
+  - task: delete-opsmanager-vm
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/delete-vm.yml
+    input_mapping:
+      state: config
+      config: config
+    params:
+      OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
+      STATE_FILE: ((foundation))/state/state.yml
+    ensure: &make-state-commit
+      do:
+        - task: make-commit
+          image: pcf-automation-image
+          file: pcf-automation-tasks/tasks/make-git-commit.yml
+          input_mapping:
+            repository: configuration
+            file-source: generated-state
+          output_mapping:
+            repository-commit: configuration-commit
+          params:
+            FILE_SOURCE_PATH: state.yml
+            FILE_DESTINATION_PATH: ((foundation))/state/state.yml
+            GIT_AUTHOR_EMAIL: "pcf-automation-bot@ronakbanka.com"
+            GIT_AUTHOR_NAME: "PCF Automation Bot"
+            COMMIT_MESSAGE: 'Update state file'
+        - put: configuration
+          params:
+            repository: configuration-commit
+            merge: true
