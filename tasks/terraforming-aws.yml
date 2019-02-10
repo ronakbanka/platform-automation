@@ -15,7 +15,7 @@ params:
   # - The path is relative to root of the `env` input
 
 run:
-  path: bash
+  path: sh
   args:
   - "-c"
   - |
