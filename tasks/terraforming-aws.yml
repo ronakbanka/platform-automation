@@ -24,11 +24,9 @@ run:
   args:
   - "-c"
   - |
-
     terraform init terraforming/terraforming-pas
 
-    terraform plan \
-    -state state/terraform.tfstate \
+    terraform plan -state state/terraform.tfstate \
     -var "env_name=${ENV_NAME}" \
     -var "access_key=${AWS_ACCESS_KEY_ID}" \
     -var "secret_key=${AWS_SECRET_ACCESS_KEY}" \
