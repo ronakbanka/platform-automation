@@ -1,8 +1,7 @@
----
-env_name           = ((prefix)) \n
-access_key         = ((aws_access_key_id)) \n
-secret_key         = ((aws_secret_access_key)) \n
-region             = ((region)) \n
-availability_zones = ((azs)) \n
-ops_manager_vm = false \n
-dns_suffix         = ((pcf_domain)) \n
+env_name = ((prefix))
+access_key = ((aws_access_key_id))
+secret_key = ((aws_secret_access_key))
+region = ((region))
+availability_zones = ((azs)) 
+ops_manager_vm = false 
+dns_suffix = ((pcf_domain))
