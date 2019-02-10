@@ -33,6 +33,7 @@ run:
     -var "region=${AWS_REGION}" \
     -var "availability_zones=${AWS_AZS}" \
     -var "dns_suffix=${PCF_DNS_DOMAIN}" \
+    -var "ops_manager_vm=${OPS_MANAGER_VM}" \
     -out pcf.tfplan \
     terraforming/terraforming-pas
 
