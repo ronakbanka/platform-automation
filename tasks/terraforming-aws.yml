@@ -37,7 +37,7 @@ run:
     -var "dns_suffix=${PCF_DNS_DOMAIN}" \
     -out pcf.tfplan \
     terraforming/terraforming-pas
-
+    
     terraform apply \
     -state-out generated-state/terraform.tfstate \
     pcf.tfplan
