@@ -24,10 +24,10 @@ run:
 
     terraform plan \
       -state state/terraform.tfstate \
-      -out terraforming/terraforming-pas/pcf.tfplan \
+      -out pcf.tfplan \
       -var-file "config/${TFVARS_FILE}" \
       terraforming/terraforming-pas
 
     terraform apply \
       -state-out generated-state/terraform.tfstate \
-      terraforming/terraforming-pas/pcf.tfplan
+      pcf.tfplan
