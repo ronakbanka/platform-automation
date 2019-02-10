@@ -20,7 +20,7 @@ run:
   - "-c"
   - |
 
-    terraform init config/terraforming-pas
+    terraform init terraforming/terraforming-pas
 
     terraform plan \
       -state state/terraform.tfstate \
