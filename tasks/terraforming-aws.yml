@@ -28,16 +28,16 @@ run:
     terraform init terraforming/terraforming-pas
 
     terraform plan \
-      -state state/terraform.tfstate \
-      -var "env_name=${ENV_NAME}" \
-      -var "access_key=${AWS_ACCESS_KEY_ID}" \
-      -var "secret_key=${AWS_SECRET_ACCESS_KEY}" \
-      -var "region=${AWS_REGION}" \
-      -var "availability_zones=${AWS_AZS}" \
-      -var "dns_suffix=${PCF_DNS_DOMAIN}" \
-      -out pcf.tfplan \
-      terraforming/terraforming-pas
+    -state state/terraform.tfstate \
+    -var "env_name=${ENV_NAME}" \
+    -var "access_key=${AWS_ACCESS_KEY_ID}" \
+    -var "secret_key=${AWS_SECRET_ACCESS_KEY}" \
+    -var "region=${AWS_REGION}" \
+    -var "availability_zones=${AWS_AZS}" \
+    -var "dns_suffix=${PCF_DNS_DOMAIN}" \
+    -out pcf.tfplan \
+    terraforming/terraforming-pas
 
     terraform apply \
-      -state-out generated-state/terraform.tfstate \
-      pcf.tfplan
+    -state-out generated-state/terraform.tfstate \
+    pcf.tfplan
