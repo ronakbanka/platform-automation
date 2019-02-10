@@ -1,0 +1,35 @@
+---
+platform: linux
+
+inputs:
+- name: configuration
+
+params:
+  S3_BUCKET_TERRAFORM:
+  S3_ENDPOINT:
+  S3_REGION:
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+
+run:
+  path: sh
+  args:
+  - "-c"
+  - |
+
+    files=$(aws --endpoint-url $S3_ENDPOINT --region $S3_REGION s3 ls "${S3_BUCKET_TERRAFORM}/")
+
+    set +e
+    echo $files | grep terraform.tfstate
+    if [ "$?" -gt "0" ]; then
+      echo "{\"version\": 3}" > terraform.tfstate
+      aws s3 --endpoint-url $S3_ENDPOINT --region $S3_REGION cp terraform.tfstate "s3://${S3_BUCKET_TERRAFORM}/terraform.tfstate"
+      set +x
+      if [ "$?" -gt "0" ]; then
+        echo "Failed to upload empty tfstate file"
+        exit 1
+      fi
+    else
+        echo "terraform.tfstate file found, skipping"
+        exit 0
+    fi

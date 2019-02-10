@@ -1,0 +1,33 @@
+---
+platform: linux
+
+inputs:
+- name: config # contains the env file with target OpsMan Information
+- name: state
+- name: terraforming
+
+outputs:
+- name: generated-state
+
+params:
+  TFVARS_FILE: terraform.tfvars
+  # - Filepath of the env config YAML
+  # - The path is relative to root of the `env` input
+
+run:
+  path: bash
+  args:
+  - "-c"
+  - |
+
+    terraform init config/terraforming-pas
+
+    terraform plan \
+      -state state/terraform.tfstate \
+      -out terraforming/terraforming-aws/pcf.tfplan \
+      -var-file "config/${TFVARS_FILE}" \
+      terraforming/terraforming-aws
+
+    terraform apply \
+      -state-out generated-state/terraform.tfstate \
+      terraforming/terraforming-aws/pcf.tfplan
