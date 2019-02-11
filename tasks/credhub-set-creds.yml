@@ -19,7 +19,6 @@ run:
   args:
   - "-c"
   - |
-    cat /var/version && echo ""
     set -euo pipefail
 
     # NOTE: The credhub cli does not ignore empty/null environment variables.
@@ -37,7 +36,7 @@ run:
 
     echo "setting up opsmanager properties in credhub..."
 
-    cd state 
+    cd state
 
     credhub set -t value -n ${PREFIX}/ops_manager_iam_user_access_key \
     -v $(terraform output --json | jq -r .ops_manager_iam_user_access_key.value)
