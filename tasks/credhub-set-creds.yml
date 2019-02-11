@@ -38,12 +38,6 @@ run:
 
     cd state
 
-    credhub set -t value -n ${PREFIX}/ops_manager_iam_user_access_key \
-    -v $(terraform output --json | jq -r .ops_manager_iam_user_access_key.value)
-
-    credhub set -t value -n ${PREFIX}/ops_manager_iam_user_secret_key \
-    -v $(terraform output --json | jq -r .ops_manager_iam_user_secret_key.value)
-
     credhub set -t value -n ${PREFIX}/pcf_aws_region \
     -v $(terraform output --json | jq -r .region.value)
 
