@@ -28,7 +28,7 @@ iaas-configuration:
   access_key_id: ((iaas-configuration_access_key_id))
   secret_access_key: ((iaas-configuration_secret_access_key))
   key_pair_name: ((iaas-configuration_key_pair_name))
-  ssh_private_key: ((opsman-ssh-private-key))
+  ssh_private_key: ((opsman-ssh-key.private_key))
   name: ((iaas-configuration_name))
   region: ((iaas-configuration_region))
   security_group: ((iaas-configuration_security_group))
