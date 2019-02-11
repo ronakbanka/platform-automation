@@ -58,3 +58,6 @@ run:
 
     credhub set -t value -n ${PREFIX}/opsman_public_ip \
     -v $(terraform output --json | jq -r .ops_manager_public_ip.value)
+
+    credhub set -t value -n ${PREFIX}/ops_manager_iam_instance_profile_name \
+    -v $(terraform output --json | jq -r .ops_manager_iam_instance_profile_name.value)
