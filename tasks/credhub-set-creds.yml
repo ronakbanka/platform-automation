@@ -14,6 +14,11 @@ params:
   # prefix flag used by credhub interpolate
   PREFIX:
 
+  # other properties
+  AWS_ACCESS_KEY_ID:
+  AWS_SECRET_ACCESS_KEY:
+  ENV_NAME:
+
 run:
   path: sh
   args:
@@ -34,9 +39,11 @@ run:
       exit 1
     fi
 
-    echo "setting up opsmanager properties in credhub..."
-
     cd state
+
+    #######################################################
+    echo "setting up opsmanager properties in credhub..."
+    #######################################################
 
     credhub set -t value -n ${PREFIX}/pcf_aws_region \
     -v $(terraform output --json | jq -r .region.value)
@@ -58,3 +65,44 @@ run:
 
     credhub set -t value -n ${PREFIX}/opsman_domain \
     -v $(terraform output --json | jq -r .ops_manager_dns.value)
+
+    ################################################################
+    echo "setting up opsman director properties in credhub..."
+    ################################################################
+
+    credhub set -t value -n ${PREFIX}/iaas-configuration_access_key_id \
+    -v ${AWS_ACCESS_KEY_ID}
+
+    credhub set -t value -n ${PREFIX}/iaas-configuration_secret_access_key \
+    -v ${AWS_SECRET_ACCESS_KEY}
+
+    credhub set -t value -n ${PREFIX}/iaas-configuration_key_pair_name \
+    -v $(terraform output --json | jq -r .ops_manager_ssh_public_key_name.value)
+
+    credhub set -t value -n ${PREFIX}/iaas-configuration_region \
+    -v $(terraform output --json | jq -r .region.value)
+
+    credhub set -t value -n ${PREFIX}/iaas-configuration_security_group \
+    -v $(terraform output --json | jq -r .vms_security_group_id.value)
+
+    credhub set -t value -n ${PREFIX}/iaas-configuration_name \
+    -v ${ENV_NAME}
+
+    credhub set -t value -n ${PREFIX}/opsman-ssh-private-key \
+    -v $(terraform output --json | jq -r .ops_manager_ssh_private_key.value)
+
+    ###############################################################
+    echo "setting up az's and networks properties in credhub....."
+    ###############################################################
+
+    credhub set -t value -n ${PREFIX}/singleton_availability_zone \
+    -v $(terraform output --json | jq -r .infrastructure_subnet_availability_zones.value[0])
+
+    credhub set -t value -n ${PREFIX}/az1 \
+    -v $(terraform output --json | jq -r .infrastructure_subnet_availability_zones.value[0])
+
+    credhub set -t value -n ${PREFIX}/az2 \
+    -v $(terraform output --json | jq -r .infrastructure_subnet_availability_zones.value[1])
+
+    credhub set -t value -n ${PREFIX}/az3 \
+    -v $(terraform output --json | jq -r .infrastructure_subnet_availability_zones.value[2])
