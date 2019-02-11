@@ -40,3 +40,6 @@ run:
     terraform apply \
     -state-out generated-state/terraform.tfstate \
     pcf.tfplan
+
+    terraform output \
+    -state  terraform output -state terraform.tfstate
