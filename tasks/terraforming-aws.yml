@@ -42,4 +42,4 @@ run:
     pcf.tfplan
 
     terraform output \
-    -state  terraform output -state terraform.tfstate
+    -state generated-state/terraform.tfstate
