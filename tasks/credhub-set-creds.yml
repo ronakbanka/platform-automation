@@ -116,6 +116,19 @@ run:
     echo "setting up network properties in credhub....."
     ###############################################################
 
+    #infrastructure network properties
+
+    credhub set -t value -n ${PREFIX}/infrastructure_subnet_cidrs_az1 \
+    -v $(terraform output --json | jq -r .infrastructure_subnet_cidrs.value[0])
+
+    credhub set -t value -n ${PREFIX}/infrastructure_subnet_ids_az1 \
+    -v $(terraform output --json | jq -r .infrastructure_subnet_ids.value[0])
+
+    credhub set -t value -n ${PREFIX}/infrastructure_subnet_gateways_az1 \
+    -v $(terraform output --json | jq -r .infrastructure_subnet_gateways.value[0])
+
+    #pas network properties
+
     credhub set -t value -n ${PREFIX}/pas_subnet_cidrs_az1 \
     -v $(terraform output --json | jq -r .pas_subnet_cidrs.value[0])
 
@@ -143,11 +156,31 @@ run:
     credhub set -t value -n ${PREFIX}/pas_subnet_gateways_az3 \
     -v $(terraform output --json | jq -r .pas_subnet_gateways.value[2])
 
-    credhub set -t value -n ${PREFIX}/infrastructure_subnet_cidrs_az1 \
-    -v $(terraform output --json | jq -r .infrastructure_subnet_cidrs.value[0])
+    #services network properties
 
-    credhub set -t value -n ${PREFIX}/infrastructure_subnet_ids_az1 \
-    -v $(terraform output --json | jq -r .infrastructure_subnet_ids.value[0])
+    credhub set -t value -n ${PREFIX}/services_subnet_cidrs_az1 \
+    -v $(terraform output --json | jq -r .services_subnet_cidrs.value[0])
 
-    credhub set -t value -n ${PREFIX}/infrastructure_subnet_gateways_az1 \
-    -v $(terraform output --json | jq -r .infrastructure_subnet_gateways.value[0])
+    credhub set -t value -n ${PREFIX}/services_subnet_cidrs_az2 \
+    -v $(terraform output --json | jq -r .services_subnet_cidrs.value[1])
+
+    credhub set -t value -n ${PREFIX}/services_subnet_cidrs_az3 \
+    -v $(terraform output --json | jq -r .services_subnet_cidrs.value[2])
+
+    credhub set -t value -n ${PREFIX}/services_subnet_ids_az1 \
+    -v $(terraform output --json | jq -r .services_subnet_ids.value[0])
+
+    credhub set -t value -n ${PREFIX}/services_subnet_ids_az2 \
+    -v $(terraform output --json | jq -r .services_subnet_ids.value[1])
+
+    credhub set -t value -n ${PREFIX}/services_subnet_ids_az3 \
+    -v $(terraform output --json | jq -r .services_subnet_ids.value[2])
+
+    credhub set -t value -n ${PREFIX}/services_subnet_gateways_az1 \
+    -v $(terraform output --json | jq -r .services_subnet_gateways.value[0])
+
+    credhub set -t value -n ${PREFIX}/services_subnet_gateways_az2 \
+    -v $(terraform output --json | jq -r .services_subnet_gateways.value[1])
+
+    credhub set -t value -n ${PREFIX}/services_subnet_gateways_az3 \
+    -v $(terraform output --json | jq -r .services_subnet_gateways.value[2])

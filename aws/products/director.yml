@@ -69,6 +69,33 @@ networks-configuration:
       ]
     },
     {
+      "name": "services",
+      "service_network": true,
+      "subnets": [
+        {
+          "iaas_identifier": ((services_subnet_ids_az1)),
+          "cidr": ((services_subnet_cidrs_az1)),
+          "dns": "8.8.8.8",
+          "gateway": ((services_subnet_gateways_az1)),
+          "availability_zone_names": [((az1))]
+        },
+        {
+          "iaas_identifier": ((services_subnet_ids_az2)),
+          "cidr": ((services_subnet_cidrs_az2)),
+          "dns": "8.8.8.8",
+          "gateway": ((services_subnet_gateways_az2)),
+          "availability_zone_names": [((az2))]
+        },
+        {
+          "iaas_identifier": ((services_subnet_ids_az3)),
+          "cidr": ((services_subnet_cidrs_az3)),
+          "dns": "8.8.8.8",
+          "gateway": ((services_subnet_gateways_az3)),
+          "availability_zone_names": [((az3))]
+        }
+      ]
+    },
+    {
       "name": "infrastructure",
       "service_network": false,
       "subnets": [
