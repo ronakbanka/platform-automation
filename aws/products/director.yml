@@ -1,0 +1,103 @@
+az-configuration: [ { "name": "((az1))" }, { "name": "((az2))" }, { "name": "((az3))" } ]
+director-configuration:
+  allow_legacy_agents: true
+  blobstore_type: local
+  bosh_recreate_on_next_deploy: false
+  bosh_recreate_persistent_disks_on_next_deploy: false
+  database_type: internal
+  director_worker_count: 5
+  encryption:
+    keys: []
+    providers: []
+  hm_emailer_options:
+    enabled: false
+  hm_pager_duty_options:
+    enabled: false
+  identification_tags: {}
+  keep_unreachable_vms: false
+  local_blobstore_options:
+    tls_enabled: true
+  ntp_servers_string: 0.pool.ntp.org
+  post_deploy_enabled: true
+  resurrector_enabled: true
+  retry_bosh_deploys: false
+  skip_director_drain: true
+iaas-configuration:
+  additional_cloud_properties: {}
+  encrypted: false
+  access_key_id: ((iaas-configuration_access_key_id))
+  secret_access_key: ((iaas-configuration_secret_access_key))
+  key_pair_name: ((iaas-configuration_key_pair_name))
+  ssh_private_key: ((opsman-ssh-private-key))
+  name: ((iaas-configuration_name))
+  region: ((iaas-configuration_region))
+  security_group: ((iaas-configuration_security_group))
+network-assignment:
+  other_availability_zones: []
+  singleton_availability_zone:
+    name: ((az1))
+  network:
+    name: "infrastructure"
+networks-configuration:
+  icmp_checks_enabled: true
+  networks: [
+    {
+      "name": "pas",
+      "service_network": false,
+      "subnets": [
+        {
+          "iaas_identifier": ((pas_subnet_ids_az1)),
+          "cidr": ((pas_subnet_cidrs_az1)),
+          "dns": "8.8.8.8",
+          "gateway": ((pas_subnet_gateways_az1)),
+          "availability_zone_names": [((az1))]
+        },
+        {
+          "iaas_identifier": ((pas_subnet_ids_az2)),
+          "cidr": ((pas_subnet_cidrs_az2)),
+          "dns": "8.8.8.8",
+          "gateway": ((pas_subnet_gateways_az2)),
+          "availability_zone_names": [((az2))]
+        },
+        {
+          "iaas_identifier": ((pas_subnet_ids_az3)),
+          "cidr": ((pas_subnet_cidrs_az3)),
+          "dns": "8.8.8.8",
+          "gateway": ((pas_subnet_gateways_az3)),
+          "availability_zone_names": [((az3))]
+        }
+      ]
+    },
+    {
+      "name": "infrastructure",
+      "service_network": false,
+      "subnets": [
+        {
+          "iaas_identifier": ((infrastructure_subnet_ids_az1)),
+          "cidr": ((infrastructure_subnet_cidrs_az1)),
+          "dns": "8.8.8.8",
+          "gateway": ((infrastructure_subnet_gateways_az1)),
+          "availability_zone_names": [((az1))]
+        }
+      ]
+    }
+  ]
+resource-configuration:
+  compilation:
+    instances: automatic
+    instance_type:
+      id: automatic
+    internet_connected: false
+  director:
+    instances: automatic
+    persistent_disk:
+      size_mb: automatic
+    instance_type:
+      id: automatic
+    internet_connected: false
+security-configuration:
+  generate_vm_passwords: true
+  opsmanager_root_ca_trusted_certs: true
+syslog-configuration:
+  enabled: false
+vmextensions-configuration: []
