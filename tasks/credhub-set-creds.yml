@@ -88,9 +88,13 @@ run:
     credhub set -t value -n ${PREFIX}/iaas-configuration_name \
     -v ${ENV_NAME}
 
+    terraform output --json | jq -r .ops_manager_ssh_private_key.value > /tmp/ops_manager_ssh_private_key
+    terraform output --json | jq -r .ops_manager_ssh_public_key.value > /tmp/ops_manager_ssh_public_key
     credhub set -t ssh -n ${PREFIX}/opsman-ssh-key \
-    --private <(terraform output --json | jq -r .ops_manager_ssh_private_key.value) \
-    --public <(terraform output --json | jq -r .ops_manager_ssh_public_key.value)
+    --private /tmp/ops_manager_ssh_private_key \
+    --public /tmp/ops_manager_ssh_public_key
+
+    rm /tmp/ops_manager_ssh_public_key /tmp/ops_manager_ssh_private_key
 
     ###############################################################
     echo "setting up azs properties in credhub....."
