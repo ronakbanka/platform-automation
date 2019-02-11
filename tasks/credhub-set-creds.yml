@@ -1,0 +1,61 @@
+---
+platform: linux
+
+inputs:
+- name: state
+
+params:
+  # credentials to talk to credhub server
+  CREDHUB_CA_CERT:
+  CREDHUB_CLIENT:
+  CREDHUB_SECRET:
+  CREDHUB_SERVER:
+
+  # prefix flag used by credhub interpolate
+  PREFIX:
+
+run:
+  path: sh
+  args:
+  - "-c"
+  - |
+    cat /var/version && echo ""
+    set -euo pipefail
+
+    # NOTE: The credhub cli does not ignore empty/null environment variables.
+    # https://github.com/cloudfoundry-incubator/credhub-cli/issues/68
+    if [ -z "$CREDHUB_CA_CERT" ]; then
+      unset CREDHUB_CA_CERT
+    fi
+
+    credhub --version
+
+    if [ -z "$PREFIX" ]; then
+      echo "Please specify a PREFIX. It is required."
+      exit 1
+    fi
+
+    echo "setting up opsmanager properties in credhub..."
+
+    cd state 
+
+    credhub set -t value -n ${PREFIX}/ops_manager_iam_user_access_key \
+    -v $(terraform output --json | jq -r .ops_manager_iam_user_access_key.value)
+
+    credhub set -t value -n ${PREFIX}/ops_manager_iam_user_secret_key \
+    -v $(terraform output --json | jq -r .ops_manager_iam_user_secret_key.value)
+
+    credhub set -t value -n ${PREFIX}/pcf_aws_region \
+    -v $(terraform output --json | jq -r .region.value)
+
+    credhub set -t value -n ${PREFIX}/opsman_vpc_subnet_id \
+    -v $(terraform output --json | jq -r .infrastructure_subnet_ids.value[0])
+
+    credhub set -t value -n ${PREFIX}/opsman_security_group_id \
+    -v $(terraform output --json | jq -r .ops_manager_security_group_id.value)
+
+    credhub set -t value -n ${PREFIX}/opsman_ssh_public_key_name \
+    -v $(terraform output --json | jq -r .ops_manager_ssh_public_key_name.value)
+
+    credhub set -t value -n ${PREFIX}/opsman_public_ip \
+    -v $(terraform output --json | jq -r .ops_manager_public_ip.value)
