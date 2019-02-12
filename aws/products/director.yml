@@ -39,7 +39,7 @@ network-assignment:
   network:
     name: "infrastructure"
 networks-configuration:
-  icmp_checks_enabled: true
+  icmp_checks_enabled: false
   networks: [
     {
       "name": "pas",
