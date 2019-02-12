@@ -50,6 +50,7 @@ networks-configuration:
           "cidr": ((pas_subnet_cidrs_az1)),
           "dns": "8.8.8.8",
           "gateway": ((pas_subnet_gateways_az1)),
+          "reserved_ip_ranges": ((pas_subnet_reserved_ips_az1)),
           "availability_zone_names": [((az1))]
         },
         {
@@ -57,6 +58,7 @@ networks-configuration:
           "cidr": ((pas_subnet_cidrs_az2)),
           "dns": "8.8.8.8",
           "gateway": ((pas_subnet_gateways_az2)),
+          "reserved_ip_ranges": ((pas_subnet_reserved_ips_az2)),
           "availability_zone_names": [((az2))]
         },
         {
@@ -64,6 +66,7 @@ networks-configuration:
           "cidr": ((pas_subnet_cidrs_az3)),
           "dns": "8.8.8.8",
           "gateway": ((pas_subnet_gateways_az3)),
+          "reserved_ip_ranges": ((pas_subnet_reserved_ips_az3)),
           "availability_zone_names": [((az3))]
         }
       ]
@@ -77,6 +80,7 @@ networks-configuration:
           "cidr": ((services_subnet_cidrs_az1)),
           "dns": "8.8.8.8",
           "gateway": ((services_subnet_gateways_az1)),
+          "reserved_ip_ranges": ((services_subnet_reserved_ips_az1)),
           "availability_zone_names": [((az1))]
         },
         {
@@ -84,6 +88,7 @@ networks-configuration:
           "cidr": ((services_subnet_cidrs_az2)),
           "dns": "8.8.8.8",
           "gateway": ((services_subnet_gateways_az2)),
+          "reserved_ip_ranges": ((services_subnet_reserved_ips_az2)),
           "availability_zone_names": [((az2))]
         },
         {
@@ -91,6 +96,7 @@ networks-configuration:
           "cidr": ((services_subnet_cidrs_az3)),
           "dns": "8.8.8.8",
           "gateway": ((services_subnet_gateways_az3)),
+          "reserved_ip_ranges": ((services_subnet_reserved_ips_az3)),
           "availability_zone_names": [((az3))]
         }
       ]
@@ -104,6 +110,7 @@ networks-configuration:
           "cidr": ((infrastructure_subnet_cidrs_az1)),
           "dns": "8.8.8.8",
           "gateway": ((infrastructure_subnet_gateways_az1)),
+          "reserved_ip_ranges": ((infrastructure_subnet_reserved_ips_az1)),
           "availability_zone_names": [((az1))]
         }
       ]
