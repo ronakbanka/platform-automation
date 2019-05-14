@@ -1,6 +1,7 @@
 ---
+az-configuration: [ { "name": "((az1))" }, { "name": "((az2))" }, { "name": "((az3))" } ]
 properties-configuration:
-  iaas-configuration:
+  iaas_configuration:
     additional_cloud_properties: {}
     encrypted: false
     access_key_id: ((iaas-configuration_access_key_id))
@@ -10,7 +11,7 @@ properties-configuration:
     name: ((iaas-configuration_name))
     region: ((iaas-configuration_region))
     security_group: ((iaas-configuration_security_group))
-  director-configuration:
+  director_configuration:
     allow_legacy_agents: true
     blobstore_type: local
     bosh_recreate_on_next_deploy: false
@@ -33,10 +34,10 @@ properties-configuration:
     resurrector_enabled: true
     retry_bosh_deploys: false
     skip_director_drain: true
-  security-configuration:
+  security_configuration:
     generate_vm_passwords: true
     opsmanager_root_ca_trusted_certs: true
-  syslog-configuration:
+  syslog_configuration:
     enabled: false
 network-assignment:
   other_availability_zones: []
@@ -135,4 +136,3 @@ resource-configuration:
     instance_type:
       id: automatic
     internet_connected: false
-az-configuration: [ { "name": "((az1))" }, { "name": "((az2))" }, { "name": "((az3))" } ]
