@@ -1,5 +1,15 @@
 az-configuration: [ { "name": "((az1))" }, { "name": "((az2))" }, { "name": "((az3))" } ]
 properties-configuration:
+  iaas-configuration:
+    additional_cloud_properties: {}
+    encrypted: false
+    access_key_id: ((iaas-configuration_access_key_id))
+    secret_access_key: ((iaas-configuration_secret_access_key))
+    key_pair_name: ((iaas-configuration_key_pair_name))
+    ssh_private_key: ((opsman-ssh-key.private_key))
+    name: ((iaas-configuration_name))
+    region: ((iaas-configuration_region))
+    security_group: ((iaas-configuration_security_group))
   director-configuration:
     allow_legacy_agents: true
     blobstore_type: local
@@ -23,16 +33,6 @@ properties-configuration:
     resurrector_enabled: true
     retry_bosh_deploys: false
     skip_director_drain: true
-  iaas-configuration:
-    additional_cloud_properties: {}
-    encrypted: false
-    access_key_id: ((iaas-configuration_access_key_id))
-    secret_access_key: ((iaas-configuration_secret_access_key))
-    key_pair_name: ((iaas-configuration_key_pair_name))
-    ssh_private_key: ((opsman-ssh-key.private_key))
-    name: ((iaas-configuration_name))
-    region: ((iaas-configuration_region))
-    security_group: ((iaas-configuration_security_group))
   security-configuration:
     generate_vm_passwords: true
     opsmanager_root_ca_trusted_certs: true
