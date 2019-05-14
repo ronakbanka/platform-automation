@@ -1,3 +1,4 @@
+---
 properties-configuration:
   iaas-configuration:
     additional_cloud_properties: {}
