@@ -118,28 +118,10 @@ run:
 
     #infrastructure network properties
 
-    credhub set -t value -n ${PREFIX}/infrastructure_subnet_cidrs_az1 \
-    -v $(terraform output --json | jq -r .infrastructure_subnet_cidrs.value[0])
-
     credhub set -t value -n ${PREFIX}/infrastructure_subnet_ids_az1 \
     -v $(terraform output --json | jq -r .infrastructure_subnet_ids.value[0])
 
-    credhub set -t value -n ${PREFIX}/infrastructure_subnet_gateways_az1 \
-    -v $(terraform output --json | jq -r .infrastructure_subnet_gateways.value[0])
-
-    credhub set -t value -n ${PREFIX}/infrastructure_subnet_reserved_ips_z1 \
-    -v $(terraform output --json | jq -r .infrastructure_subnet_reserved_ips.value[0])
-
-    #pas network properties
-
-    credhub set -t value -n ${PREFIX}/pks_subnet_cidrs_az1 \
-    -v $(terraform output --json | jq -r .pks_subnet_cidrs.value[0])
-
-    credhub set -t value -n ${PREFIX}/pks_subnet_cidrs_az2 \
-    -v $(terraform output --json | jq -r .pks_subnet_cidrs.value[1])
-
-    credhub set -t value -n ${PREFIX}/pks_subnet_cidrs_az3 \
-    -v $(terraform output --json | jq -r .pks_subnet_cidrs.value[2])
+    #pks network properties
 
     credhub set -t value -n ${PREFIX}/pks_subnet_ids_az1 \
     -v $(terraform output --json | jq -r .pks_subnet_ids.value[0])
@@ -150,34 +132,7 @@ run:
     credhub set -t value -n ${PREFIX}/pks_subnet_ids_az3 \
     -v $(terraform output --json | jq -r .pks_subnet_ids.value[2])
 
-    credhub set -t value -n ${PREFIX}/pks_subnet_gateways_az1 \
-    -v $(terraform output --json | jq -r .pks_subnet_gateways.value[0])
-
-    credhub set -t value -n ${PREFIX}/pks_subnet_gateways_az2 \
-    -v $(terraform output --json | jq -r .pks_subnet_gateways.value[1])
-
-    credhub set -t value -n ${PREFIX}/pks_subnet_gateways_az3 \
-    -v $(terraform output --json | jq -r .pks_subnet_gateways.value[2])
-
-    credhub set -t value -n ${PREFIX}/pks_subnet_reserved_ips_z1 \
-    -v $(terraform output --json | jq -r .pks_subnet_reserved_ips.value[0])
-
-    credhub set -t value -n ${PREFIX}/pks_subnet_reserved_ips_z2 \
-    -v $(terraform output --json | jq -r .pks_subnet_reserved_ips.value[1])
-
-    credhub set -t value -n ${PREFIX}/pks_subnet_reserved_ips_z3 \
-    -v $(terraform output --json | jq -r .pks_subnet_reserved_ips.value[2])
-
     #services network properties
-
-    credhub set -t value -n ${PREFIX}/services_subnet_cidrs_az1 \
-    -v $(terraform output --json | jq -r .services_subnet_cidrs.value[0])
-
-    credhub set -t value -n ${PREFIX}/services_subnet_cidrs_az2 \
-    -v $(terraform output --json | jq -r .services_subnet_cidrs.value[1])
-
-    credhub set -t value -n ${PREFIX}/services_subnet_cidrs_az3 \
-    -v $(terraform output --json | jq -r .services_subnet_cidrs.value[2])
 
     credhub set -t value -n ${PREFIX}/services_subnet_ids_az1 \
     -v $(terraform output --json | jq -r .services_subnet_ids.value[0])
@@ -188,20 +143,9 @@ run:
     credhub set -t value -n ${PREFIX}/services_subnet_ids_az3 \
     -v $(terraform output --json | jq -r .services_subnet_ids.value[2])
 
-    credhub set -t value -n ${PREFIX}/services_subnet_gateways_az1 \
-    -v $(terraform output --json | jq -r .services_subnet_gateways.value[0])
+    ###############################################################
+    echo "setting up PKS properties in credhub....."
+    ###############################################################
 
-    credhub set -t value -n ${PREFIX}/services_subnet_gateways_az2 \
-    -v $(terraform output --json | jq -r .services_subnet_gateways.value[1])
-
-    credhub set -t value -n ${PREFIX}/services_subnet_gateways_az3 \
-    -v $(terraform output --json | jq -r .services_subnet_gateways.value[2])
-
-    credhub set -t value -n ${PREFIX}/services_subnet_reserved_ips_z1 \
-    -v $(terraform output --json | jq -r .services_subnet_reserved_ips.value[0])
-
-    credhub set -t value -n ${PREFIX}/services_subnet_reserved_ips_z2 \
-    -v $(terraform output --json | jq -r .services_subnet_reserved_ips.value[1])
-
-    credhub set -t value -n ${PREFIX}/services_subnet_reserved_ips_z3 \
-    -v $(terraform output --json | jq -r .services_subnet_reserved_ips.value[2])
+    credhub set -t value -n ${PREFIX}/pks_api_hostname \
+    -v $(terraform output --json | jq -r .pks_api_endpoint)
