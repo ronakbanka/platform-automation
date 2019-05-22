@@ -42,11 +42,11 @@ networks-configuration:
   icmp_checks_enabled: false
   networks: [
     {
-      "name": "deployment",
+      "name": "pas",
       "service_network": false,
       "subnets": [
         {
-          "iaas_identifier": ((deployment_subnet_ids_az1)),
+          "iaas_identifier": ((pas_subnet_ids_az1)),
           "cidr": 10.0.4.0/24,
           "dns": "8.8.8.8",
           "gateway": 10.0.4.1,
@@ -54,7 +54,7 @@ networks-configuration:
           "availability_zone_names": [((az1))]
         },
         {
-          "iaas_identifier": ((deployment_subnet_ids_az2)),
+          "iaas_identifier": ((pas_subnet_ids_az2)),
           "cidr": 10.0.5.0/24,
           "dns": "8.8.8.8",
           "gateway": 10.0.5.1,
@@ -62,7 +62,7 @@ networks-configuration:
           "availability_zone_names": [((az2))]
         },
         {
-          "iaas_identifier": ((deployment_subnet_ids_az3)),
+          "iaas_identifier": ((pas_subnet_ids_az3)),
           "cidr": 10.0.6.0/24,
           "dns": "8.8.8.8",
           "gateway": 10.0.6.1,
