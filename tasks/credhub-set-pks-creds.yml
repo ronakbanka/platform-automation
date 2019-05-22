@@ -148,4 +148,4 @@ run:
     ###############################################################
 
     credhub set -t value -n ${PREFIX}/pks_api_hostname \
-    -v $(terraform output --json | jq -r .pks_api_endpoint)
+    -v $(terraform output --json | jq -r .pks_api_endpoint.value)
