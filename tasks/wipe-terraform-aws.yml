@@ -26,7 +26,9 @@ run:
   - |
     terraform init terraforming/terraforming-pas
 
-    terraform destroy -state state/terraform.tfstate \
+    terraform destroy \
+    -force \
+    -state state/terraform.tfstate \
     -state-out generated-state/terraform.tfstate \
     -var "env_name=${ENV_NAME}" \
     -var "access_key=${AWS_ACCESS_KEY_ID}" \
