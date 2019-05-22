@@ -8,9 +8,9 @@ product-properties:
     selected_option: aws
     value: AWS
   .properties.cloud_provider.aws.iam_instance_profile_master:
-    value: ((ENV_NAME))-pks-master-role
+    value: ((ENV_NAME))_pks_master
   .properties.cloud_provider.aws.iam_instance_profile_worker:
-    value: ((ENV_NAME))-pks-worker-role
+    value: ((ENV_NAME))_pks_worker
   .properties.log_sink_resources_deploy:
     value: true
   .properties.metric_sink_resources_deploy:
