@@ -112,8 +112,6 @@ product-properties:
   .properties.proxy_selector:
     selected_option: disabled
     value: Disabled
-  .properties.quotas_enabled:
-    value: true
   .properties.syslog_selector:
     selected_option: disabled
     value: disabled
