@@ -37,6 +37,7 @@ properties-configuration:
   security_configuration:
     generate_vm_passwords: true
     opsmanager_root_ca_trusted_certs: true
+    trusted_certificates: ((iaas-configuration_opsman_trusted_certs.ca))
   syslog_configuration:
     enabled: false
 network-assignment:
@@ -136,3 +137,9 @@ resource-configuration:
     instance_type:
       id: automatic
     internet_connected: false
+vmextensions-configuration:
+- name: pks-api-lb-security-group
+  cloud_properties:
+    security_groups:
+    - pks_api_lb_security_group
+    - vms_security_group
