@@ -19,7 +19,7 @@ run:
     export S3_BUCKET_TERRAFORM=$ENV_NAME-pcf-terraform-state
 
     echo "creating bucket for terraform state...$S3_BUCKET_TERRAFORM"
-    aws --endpoint-url $S3_ENDPOINT --region $S3_REGION s3 mb "$S3_BUCKET_TERRAFORM"
+    aws --endpoint-url $S3_ENDPOINT --region $S3_REGION s3 mb "s3://${S3_BUCKET_TERRAFORM}"
 
     files=$(aws --endpoint-url $S3_ENDPOINT --region $S3_REGION s3 ls "${S3_BUCKET_TERRAFORM}/")
 
