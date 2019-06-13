@@ -17,6 +17,7 @@ params:
   AWS_AZS:
   OPS_MANAGER_VM: false
   PCF_DNS_DOMAIN:
+  PCF_HOSTED_ZONE:
 
 
 run:
@@ -34,6 +35,7 @@ run:
     -var "availability_zones=${AWS_AZS}" \
     -var "dns_suffix=${PCF_DNS_DOMAIN}" \
     -var "ops_manager_vm=${OPS_MANAGER_VM}" \
+    -var "hosted_zone=${PCF_HOSTED_ZONE}"
     -out pcf.tfplan \
     terraforming/terraforming-pas
 
