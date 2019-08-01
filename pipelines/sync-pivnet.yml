@@ -1,0 +1,228 @@
+---
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tags: latest-final
+
+resources:
+- name: pcf-automation-pivnet
+  type: pivnet
+  source:
+    api_token: ((pivnet_token))
+    product_slug: platform-automation
+    product_version: 2\.(.*) # pin to major version 1
+    sort_by: semver
+
+- name: opsman-product
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_pivnet_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: opsman/ops-manager-aws-(.*).yml
+    skip_ssl_verification: true
+
+- name: pas-product
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_pivnet_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: PAS/cf-(.*).pivotal
+    skip_ssl_verification: true
+
+- name: pas-stemcell
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_pivnet_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: PAS/bosh-stemcell-(.*)-vsphere(.*).tgz
+    skip_ssl_verification: true
+
+- name: pcf-automation-tasks
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_automation_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: platform-automation-tasks-(.*).zip
+    skip_ssl_verification: true
+
+- name: pcf-automation-image
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_automation_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: platform-automation-image-(.*).tgz
+    skip_ssl_verification: true
+
+- name: configuration
+  type: git
+  source:
+    uri: https://10.105.190.7/gitadmin/msi-pcf-automation.git
+    branch: master
+    username: ((git_user))
+    password: ((git_password))
+    skip_ssl_verification: true
+
+- name: healthwatch-product
+  type: s3
+  source:
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_pivnet_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: healthwatch/p-healthwatch-(.*).pivotal
+    skip_ssl_verification: true
+
+- name : healthwatch-stemcell
+  type : s3
+  source :
+    endpoint: ((s3_endpoint))
+    access_key_id: ((s3_access_key_id))
+    bucket: ((s3_buckets_pivnet_products))
+    secret_access_key: ((s3_secret_access_key))
+    regexp: healthwatch/stemcells/bosh-stemcell-(.*)-vsphere-esxi-ubuntu-xenial-go_agent.tgz
+    skip_ssl_verification: true
+
+jobs:
+
+- name: fetch-platform-automation
+  # We use the pivnet resource to bootstrap the pipeline,
+  # and because this product is part of the pipeline, not the foundation
+  plan:
+  - get: after-midnight
+    trigger: true
+  - get: pcf-automation-pivnet
+  - aggregate:
+    - put: pcf-automation-tasks
+      params:
+        file: pcf-automation-pivnet/platform-automation-tasks-*.zip
+    - put: pcf-automation-image
+      params:
+        file: pcf-automation-pivnet/platform-automation-image-*.tgz
+
+- name: fetch-healthwatch
+  plan:
+  - aggregate:
+    - get: after-midnight
+      trigger: true
+    - get: pcf-automation-image
+      params:
+        unpack: true
+    - get: pcf-automation-tasks
+      params:
+        unpack: true
+    - get: configuration
+  - task: credhub-interpolate
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub_ca_cert.ca))
+      CREDHUB_CLIENT: ((credhub_client))
+      CREDHUB_SECRET: ((credhub_secret))
+      CREDHUB_SERVER: ((credhub_server))
+      PREFIX: /concourse/((foundation))
+      INTERPOLATION_PATH: ((foundation))
+    input_mapping:
+      files: configuration
+    output_mapping:
+      interpolated-files: config
+  - task: download-healthwatch-product-and-stemcell
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((foundation))/config/healthwatch.yml
+    output_mapping: {downloaded-stemcell: healthwatch-stemcell}
+  - aggregate:
+    - put: healthwatch-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: healthwatch-stemcell
+      params:
+        file: healthwatch-stemcell/*.tgz
+
+- name: fetch-opsman
+  plan:
+  - aggregate:
+    - get: after-midnight
+      trigger: true
+    - get: pcf-automation-image
+      params:
+        unpack: true
+    - get: pcf-automation-tasks
+      params:
+        unpack: true
+    - get: configuration
+  - task: credhub-interpolate
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub_ca_cert.ca))
+      CREDHUB_CLIENT: ((credhub_client))
+      CREDHUB_SECRET: ((credhub_secret))
+      CREDHUB_SERVER: ((credhub_server))
+      PREFIX: /concourse/((foundation))
+      INTERPOLATION_PATH: ((foundation))
+    input_mapping:
+      files: configuration
+    output_mapping:
+      interpolated-files: config
+  - task: download-opsman-image
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((foundation))/config/download-opsman-image.yml
+  - aggregate:
+    - put: opsman-product
+      params:
+        file: downloaded-product/*
+
+- name: fetch-pas
+  plan:
+  - aggregate:
+    - get: after-midnight
+      trigger: true
+    - get: pcf-automation-image
+      params:
+        unpack: true
+    - get: pcf-automation-tasks
+      params:
+        unpack: true
+    - get: configuration
+  - task: credhub-interpolate
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub_ca_cert.ca))
+      CREDHUB_CLIENT: ((credhub_client))
+      CREDHUB_SECRET: ((credhub_secret))
+      CREDHUB_SERVER: ((credhub_server))
+      PREFIX: /concourse/((foundation))
+      INTERPOLATION_PATH: ((foundation))
+    input_mapping:
+      files: configuration
+    output_mapping:
+      interpolated-files: config
+  - task: download-pas-product-and-stemcell
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((foundation))/config/pas.yml
+    output_mapping: {downloaded-stemcell: pas-stemcell}
+  - aggregate:
+    - put: pas-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: pas-stemcell
+      params:
+        file: pas-stemcell/*.tgz
