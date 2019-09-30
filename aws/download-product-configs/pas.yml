@@ -1,0 +1,7 @@
+---
+pivnet-api-token: ((pivnet_token))
+pivnet-file-glob: "*srt*.pivotal"
+pivnet-product-slug: elastic-runtime
+product-version-regex: ^2\.[7]\.0.*$
+stemcell-iaas: aws
+
