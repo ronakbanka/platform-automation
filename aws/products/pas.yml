@@ -409,7 +409,7 @@ resource-config:
       id: automatic
     internet_connected: false
   router:
-    instances: automatic
+    instances: 2
     instance_type:
       id: automatic
     internet_connected: false
